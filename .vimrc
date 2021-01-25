@@ -32,19 +32,41 @@ Plug 'jacoborus/tender.vim'
 Plug 'gruvbox-community/gruvbox'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
+Plug 'mattn/emmet-vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'cormacrelf/vim-colors-github'
+Plug 'simlrh/neovim-node-plugin-example', { 'do': 'npm install' }
 
-Plug '~/code/gruber/'
+Plug '~/code/autosave-vim/'
 call plug#end()
 
-colorscheme gruvbox 
-let g:gruvbox_italic=1
-let g:gruvbox_bold=1
-set background=dark
 set number relativenumber
 set nu rnu
+set nohlsearch
+au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+
+" colorscheme gruvbox 
+" let g:gruvbox_italic=1
+" let g:gruvbox_bold=1
+let g:github_colors_soft = 1
+let g:github_colors_block_diffmark = 0
+set termguicolors     " enable true colors support
+" use the dark theme
+set background=dark
+colorscheme github
+let g:airline_theme = "github"
+let g:lightline = { 'colorscheme': 'github' }
+
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-lua require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
+
+" lsp-config stuff
+lua require'lspconfig'.gopls.setup{ on_attach=require'completion'.on_attach }
+"lua require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
+
+let g:go_fmt_autosave = 1
+let g:go_fmt_command = 'goimports'
+
 set completeopt=menuone,noinsert,noselect
 
 if executable('rg')
@@ -62,8 +84,11 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js"
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 let g:airline_solarized_bg='dark'
 let g:airline_theme='solarized'
+
+tnoremap <Esc><Esc> <C-\><C-n>
 nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>pp :set paste<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
 nnoremap <leader>u :UndotreeShow<CR>

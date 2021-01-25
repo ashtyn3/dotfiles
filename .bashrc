@@ -196,7 +196,6 @@ export PATH=$PATH:~/.cargo/bin
      declare -f -F $1 > /dev/null
      return $?
  }
-
 export editor='vim'
 export PATH=$PATH:/usr/local/go/bin;
 export PATH=$PATH:/home/ashtyn372/.local/bin
@@ -204,9 +203,31 @@ export JAVA_HOME="/usr/lib/jvm/java-1.11.0-openjdk-amd64"
 export GOLAND_JDK="/usr/lib/jvm/java-1.11.0-openjdk-amd64"
 export BOOST_ROOT=/usr/include/boost
 export GOPATH=~/code
+export PATH=$PATH:$GOPATH/bin
 alias ls="exa --color=always"
 export coin_address="0cb1f2e59e7e45c7ef8c7a6f3e1a2e58bace7b0d7f98841cc0f0faa758fb0f73"
 tmux attach-session -t 0
 source "$HOME/.cargo/env"
 alias v="nvim"
 alias vim="nvim"
+alias code="cd ~/code"
+code
+
+export PATH=$PATH:/home/ashtyn/.nvm/versions/node/v15.5.0/bin;
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=$PATH:$JAVA_HOME/bin
+export ANDROID_HOME=~/Android
+export PATH=$ANDROID_HOME/tools:$PATH
+export PATH=$ANDROID_HOME/tools/bin:$PATH
+export PATH=$ANDROID_HOME/platform-tools:$PATH
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export DISPLAY=:0
+export LIBGL_ALWAYS_INDIRECT=1
+export GO111MODULE=on
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/ashtyn/.sdkman"
+[[ -s "/home/ashtyn/.sdkman/bin/sdkman-init.sh" ]] && source "/home/ashtyn/.sdkman/bin/sdkman-init.sh"
+export DENO_INSTALL="/home/ashtyn/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
