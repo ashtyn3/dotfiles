@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+
+
+echo -e "---------------------------"
+echo -e "|    Grabbing programs    |"
+echo -e "---------------------------"
+echo
+
+install_base=$(pwd)
+echo -e "- Golang"
+curl https://golang.org/dl/go1.16.4.linux-amd64.tar.gz
+
+echo "- Nvm (Node Version Manager)"
+cd
+curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh -o install_nvm.sh
+echo -e "- System packages"
+
+pacman -Syy
+pacman -Syu
+
+pacman -S tar zip unzip make yay curl
+pacman -S cmake freetype2 fontconfig pkg-config make libxcb
+sudo pacman -S base-devel cmake unzip ninja tree-sitter
+
+echo -e "---------------------------"
+echo -e "|    installing Golang    |"
+echo -e "---------------------------"
+echo
+
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.4.linux-amd64.tar.gz
+echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.zshrc.zsh
+
+
+echo -e "-------------------------"
+echo -e "|    Installing Nvim    |"
+echo -e "-------------------------"
+echo
+
+mkdir ~/.config/nvim
+mv ./vim/init.vim ~/.config/nvim
+mv ./vim/.vimrc ~
+mv ./vim/.vim ~
+cd
+git clone https://github.com/neovim/neovim.git
+make
+sudo make install
+cd
+
+echo -e "---------------------------"
+echo -e "|    Installing Rustup    |"
+echo -e "---------------------------"
+echo
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+
+echo -e "------------------------------"
+echo -e "|    Installing Alacritty    |"
+echo -e "------------------------------"
+echo
+
+cargo install alacritty
+cd $install_base
+mkdir ~/.config/alacritty/
+mv ./alacritty/alacritty.yml ~/.config/alacritty/
+
+
+echo -e "------------------------"
+echo -e "|    Installing ZSH    |"
+echo -e "------------------------"
+echo
+
+pacman -S zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+
+
+echo -e "-------------------------"
+echo -e "|    Installing Node    |"
+echo -e "-------------------------"
+echo
+
+bash install_nvm.sh
+
+export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+echo "export NVM_DIR="\$HOME/.nvm"
+  [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "\$NVM_DIR/bash_completion" ] && \. "\$NVM_DIR/bash_completion"  # This loads nvm bash_completion"
+
+nvm install node
+
+
+echo -e "-------------------------"
+echo -e "|    Installing Yarn    |"
+echo -e "-------------------------"
+echo
+
+npm install --global yarn
