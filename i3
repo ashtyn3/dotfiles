@@ -1,0 +1,1 @@
+/home/ashtyn/.config/i3

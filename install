@@ -43,6 +43,7 @@ mv ./vim/.vimrc ~
 mv ./vim/.vim ~
 cd
 git clone https://github.com/neovim/neovim.git
+cd neovim
 make
 sudo make install
 cd
@@ -74,13 +75,12 @@ echo
 pacman -S zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-
-
 echo -e "-------------------------"
 echo -e "|    Installing Node    |"
 echo -e "-------------------------"
 echo
 
+cd
 bash install_nvm.sh
 
 export NVM_DIR="$HOME/.nvm"

@@ -1,3 +1,1 @@
-set runtimepath^=~/.vim
-let &packpath=&runtimepath
-source ~/.vimrc
+/home/ashtyn/.config/nvim/init.vim
