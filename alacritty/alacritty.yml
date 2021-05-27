@@ -1,0 +1,17 @@
+font:
+    size: 10.0
+    normal:
+        family: "FiraMono"
+    bold:
+        family: "FiraMono"
+env:
+    WINIT_X11_SCALE_FACTOR: "1.2"
+
+key_bindings:
+    - { key: Space, mods: Alt, chars: "ls\n" }
+    - { key: C, mods: Alt, chars: "cd " }
+
+background_opacity: 0.9
+#colors:
+#    primary:
+#background: "0x1d2021"

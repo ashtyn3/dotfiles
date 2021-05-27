@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+# Combine batteries to one uvent file for i3bar
+# Uses FontAwesome v4.6.3
+# https://github.com/FortAwesome/Font-Awesome/blob/v4.6.3/fonts/fontawesome-webfont.ttf
+
+require 'fileutils'
+
+UVEVENTPATH = '/sys/class/power_supply/BAT*'
+ACPATH = '/sys/class/power_supply/AC'
+
+def to_something(str)
+  duck = (Integer(str) rescue Float(str) rescue nil) 
+  duck.nil? ? str : duck  
+end
+
+def write_output(content)
+  str = []
+  content[:POWER_SUPPLY_PRESENT] == 1 ? (str << ' ') : (str << '')
+  str << '' if content[:POWER_SUPPLY_CAPACITY_LEVEL] == 'Full'
+  str << "#{content[:POWER_SUPPLY_CAPACITY]}%"
+  2.times {puts str.join(' ')}
+  case content[:POWER_SUPPLY_CAPACITY]
+    when 0..20 then puts '#FF0000'
+    when 21..40 then puts '#FFAE00'
+    when 41..60 then puts '#FFF600'
+    when 61..95 then puts '#A8FF00'
+  end
+
+  exit 33  if content[:POWER_SUPPLY_CAPACITY] < 4
+end
+
+def combinebatts(result, nextbatt)
+  result.merge!(nextbatt) do |k, o, n|
+    case nextbatt[k]
+      when Fixnum then o + n
+      when 'Full' then o
+      when 'Unknown' then o
+      else n
+    end
+  end
+  result[:POWER_SUPPLY_PRESENT] = format_uevent(File.read("#{ACPATH}/uevent"))[:POWER_SUPPLY_ONLINE] 
+  result[:POWER_SUPPLY_CAPACITY] = (result[:POWER_SUPPLY_ENERGY_NOW] * 100 / result[:POWER_SUPPLY_ENERGY_FULL]).to_i
+  result[:POWER_SUPPLY_VOLTAGE_MIN_DESIGN] = (result[:POWER_SUPPLY_VOLTAGE_MIN_DESIGN] / 2).to_i
+  result[:POWER_SUPPLY_POWER_NOW] = (result[:POWER_SUPPLY_POWER_NOW] / 2).to_i
+end
+
+def format_uevent(uevent)
+  result = {}
+  uevent.split("\n").each do |line|
+    pair = line.split('=')
+    result[pair[0].to_sym] = to_something(pair[1].strip)
+  end
+  result
+end
+
+batts = Dir[UVEVENTPATH]
+
+uevent_data = []
+combined = {}
+
+batts.each do |batt|
+  uevent_data << format_uevent(File.read("#{batt}/uevent")) if File.exist? "#{batt}/uevent"
+end
+
+uevent_data.each do |current|
+  combinebatts(combined, current)
+end
+
+write_output combined
+
+
