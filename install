@@ -2,24 +2,30 @@
 
 
 
+install_base=$(pwd)
+install_dir=$HOME/.raw_installs
+
+mkdir $install_dir
+
 echo -e "---------------------------"
 echo -e "|    Grabbing programs    |"
 echo -e "---------------------------"
 echo
 
-install_base=$(pwd)
 echo -e "- Golang"
+cd $install_dir
 curl https://golang.org/dl/go1.16.4.linux-amd64.tar.gz
 
 echo "- Nvm (Node Version Manager)"
-cd
+
 curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh -o install_nvm.sh
+
 echo -e "- System packages"
 
 pacman -Syy
 pacman -Syu
 
-pacman -S tar zip unzip make yay curl
+pacman -S tar zip unzip make yay curl brightnessctl volumeicon
 pacman -S cmake freetype2 fontconfig pkg-config make libxcb
 sudo pacman -S base-devel cmake unzip ninja tree-sitter
 
@@ -28,8 +34,9 @@ echo -e "|    installing Golang    |"
 echo -e "---------------------------"
 echo
 
-rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.4.linux-amd64.tar.gz
-echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.zshrc.zsh
+rm -rf /usr/local/go
+tar -C /usr/local -xzf go1.16.4.linux-amd64.tar.gz
+echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.zshrc
 
 
 echo -e "-------------------------"
@@ -41,12 +48,12 @@ mkdir ~/.config/nvim
 mv ./vim/init.vim ~/.config/nvim
 mv ./vim/.vimrc ~
 mv ./vim/.vim ~
-cd
+cd $install_dir
 git clone https://github.com/neovim/neovim.git
 cd neovim
 make
 sudo make install
-cd
+cd $install_dir
 
 echo -e "---------------------------"
 echo -e "|    Installing Rustup    |"
@@ -62,7 +69,6 @@ echo -e "------------------------------"
 echo
 
 cargo install alacritty
-cd $install_base
 mkdir ~/.config/alacritty/
 mv ./alacritty/alacritty.yml ~/.config/alacritty/
 
@@ -75,12 +81,21 @@ echo
 pacman -S zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+echo -e "--------------------------"
+echo -e "|    Installing Dmenu    |"
+echo -e "--------------------------"
+echo
+
+git clone https://github.com/ashtyn3/dmenu
+cd dmenu
+sudo make clean install
+cd $install_dir
+
 echo -e "-------------------------"
 echo -e "|    Installing Node    |"
 echo -e "-------------------------"
 echo
 
-cd
 bash install_nvm.sh
 
 export NVM_DIR="$HOME/.nvm"
@@ -100,3 +115,4 @@ echo -e "-------------------------"
 echo
 
 npm install --global yarn
+
