@@ -7,6 +7,8 @@ font pango:monospace 8
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id xautolock -time 22 -locker blurlock
 exec --no-startup-id picom -b
+exec --no-startup-id feh --no-fehbg --bg-fill "$HOME/dotfiles/wallpaper-2.jpg"
+
 exec xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 
 
@@ -184,3 +186,17 @@ bar {
 gaps inner 7
 gaps outer -1
 
+bindsym $mod+BackSpace mode "$mode_system"
+set $mode_system (l)ock, (e)xit, (s)uspend, (r)eboot, (Shift+s)hutdown
+exec [ "$(cat /proc/1/comm)" = "systemd" ] && logind=systemctl || logind=loginctl
+mode "$mode_system" {
+    bindsym l exec --no-startup-id blurlock, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id $logind systemctl suspend | blurlock, mode "default"
+    bindsym r exec --no-startup-id $logind reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id logind poweroff, mode "default"
+
+    # exit system mode: "Enter" or "Escape"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
